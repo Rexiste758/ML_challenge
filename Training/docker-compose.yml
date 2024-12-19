@@ -1,0 +1,27 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql-training
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+    ports:
+      - "3307:3306"
+    networks:
+      - app-network
+
+  python-app:
+    build: .
+    environment:
+      DB_HOST: host.docker.internal  # Esto apunta a tu máquina local (si estás en Docker Desktop)
+      DB_USER: root                  # Usuario root
+      DB_PASSWORD: 123456      # Contraseña root
+      DB_NAME: metlife            # Nombre de la base de datos
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
